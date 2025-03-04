@@ -63,7 +63,7 @@ results will not be pretty."
   :type '(list face)
   :group 'elastic-indent)
 
-(defface elastic-indent-vertical-lines '((t (:box (:line-width (-1 . 0))))) "Face for indentation lines.")
+;; (defface elastic-indent-vertical-lines '((t (:box (:line-width (-1 . 0))))) "Face for indentation lines.")
 
 (defun elastic-indent-fontify-alternate ()
   "Highlight indentation by columns of alternating background color."
@@ -72,12 +72,12 @@ results will not be pretty."
   (setq elastic-indent-rest-faces '(elastic-indent elastic-indent-2))
   (setq elastic-indent-fst-col-faces '(elastic-indent elastic-indent-2)))
 
-(defun elastic-indent-fontify-with-lines ()
-  "Experimental way to fontify indentation."
-  (interactive)
-  (setq elastic-indent-lvl-cycle-size 2)
-  (setq elastic-indent-rest-faces '(elastic-indent-vertical-lines default))
-  (setq elastic-indent-fst-col-faces '(elastic-indent-vertical-lines default)))
+;; (defun elastic-indent-fontify-with-lines ()
+;;   "Experimental way to fontify indentation."
+;;   (interactive)
+;;   (setq elastic-indent-lvl-cycle-size 2)
+;;   (setq elastic-indent-rest-faces '(elastic-indent-vertical-lines default))
+;;   (setq elastic-indent-fst-col-faces '(elastic-indent-vertical-lines default)))
 
 (define-minor-mode elastic-indent-mode
   "Improves indentation with in variable-pitch face.
