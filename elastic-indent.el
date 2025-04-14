@@ -186,7 +186,17 @@ which can be much further down the buffer.
 If a change spans several lines, then START-COL is ignored, and
 changes are propagated until indentation level reaches 0.
 FORCE-PROPAGATE forces even single-line changes to be treated
-this way."
+this way.
+
+This function also has special treatment for empty lines, because people
+usually don't mean empty lines as a way to reset indentation. This means
+three things:
+
+∗1. When looking for a reference point to propagate widths (backwards) we
+skip empty lines.
+∗2. When propagating forward, we skip empty lines
+∗3. In particular, we need to skip an empty line, we never use it as a reference point.
+"
   (let (prev-widths ; the list of widths of each *column* of indentation of the previous line
         (reference-pos 0) ; the buffer position in the previous line of 1st printable char
         (std-width (window-font-width))
@@ -207,7 +217,7 @@ this way."
              ;; (message "char copy: %s->%s (w=%s) %s" (1- reference-pos) (point) w prev-widths)
              w))
          (char-loop () ; take care of one line.
-           ;; copy width from prev-widths, then reference-pos to (point). Loop to end of indentation.
+           ;; copy width from prev-widths until empty, then reference-pos to (point). Loop to end of indentation.
            ;; Preconditions: cur col = start-col.  prev-widths=nil or contains cached widths
            ;; (message "@%s %s=>%s %s" (line-number-at-pos) (- reference-pos (length prev-widths)) (point) prev-widths)
            (while-let ((cur-line-not-ended-c (not (eolp)))
@@ -216,19 +226,25 @@ this way."
              (pcase char
                (?\s (elastic-indent-set-char-info (point) (get-next-column-width)))
                (?\t (elastic-indent-set-char-info (point)
-                                               (elastic-indent-combine-info std-width
-                                                (--map (get-next-column-width) (-repeat tab-width ()))))))
+                        (elastic-indent-combine-info std-width
+                         (--map (get-next-column-width) (-repeat tab-width ()))))))
              (forward-char)))
          (next-line () ; advance to next line, maintaining state.
            (setq prev-widths (nreverse space-widths))
            (setq space-widths nil)
-           (setq reference-pos (point)) ; we go to next line exactly after we reached the last space
-           (forward-line)))
+           (unless (looking-at-p "$") ;; (∗3)
+             (setq reference-pos (point))) ; we go to next line exactly after we reached the last space
+           (forward-line)
+           (message "advancing")
+           (while (and (< (point) (point-max)) (looking-at-p "$")) ;; (∗2)
+             (forward-line))))
       (save-excursion
         (when (eq (forward-line -1) 0)
+          (while (and (> (point) (point-min)) (looking-at-p "$") (eq (forward-line -1) 0))) ; (∗1)
           (setq reference-pos (progn (move-to-column start-col) (point)))))
       ;; (message "%s: first line. update from startcol=%s curcol=%s" (line-number-at-pos) start-col (current-column))
-      (when (elastic-indent-in-indent) ; if not characters are not to be changed.
+      ;; The first line is special because we only need to update it we we are inside the indentation.
+      (when (elastic-indent-in-indent) ; if not, characters are not to be changed.
         (char-loop))
       (next-line)
       (when (or force-propagate (<= (point) change-end))
