@@ -159,7 +159,7 @@ The car of I is the width, and the cdr of I is the level."
         (?\t (setq col (+ 8 col)))
         (_ (setq target -1)))
       (when (<= 0 target) (forward-char)))
-    (not (looking-at (rx (any "\s\t"))))))
+    (not (looking-at-p (rx (any "\s\t"))))))
 
 (defun elastic-indent-in-indent ()
   "Return t iff all characters to the left are indentation chars."
