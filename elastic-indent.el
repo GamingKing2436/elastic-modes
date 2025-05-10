@@ -235,7 +235,7 @@ skip empty lines.
            (unless (looking-at-p "$") ;; (∗3)
              (setq reference-pos (point))) ; we go to next line exactly after we reached the last space
            (forward-line)
-           (message "advancing")
+           ;; (message "advancing")
            (while (and (< (point) (point-max)) (looking-at-p "$")) ;; (∗2)
              (forward-line))))
       (save-excursion
