@@ -50,7 +50,7 @@ Fontification can only happen on a per-character basis.
 Therefore, if indentation is implemented by a mix of space and
 tabulation characters, as typical in Emacs source code, the
 results will not be pretty."
-  :type 'bool :group 'elastic-indent)
+  :type 'boolean :group 'elastic-indent)
 
 (defface elastic-indent '((t (:inherit lazy-highlight))) "Face for indentation highlighting.")
 (defface elastic-indent-2 '((t (:inherit highlight))) "Second face for indentation highlighting.")
@@ -189,14 +189,13 @@ FORCE-PROPAGATE forces even single-line changes to be treated
 this way.
 
 This function also has special treatment for empty lines, because people
-usually don't mean empty lines as a way to reset indentation. This means
+usually don't mean empty lines as a way to reset indentation.  This means
 three things:
 
 ∗1. When looking for a reference point to propagate widths (backwards) we
 skip empty lines.
 ∗2. When propagating forward, we skip empty lines
-∗3. In particular, we need to skip an empty line, we never use it as a reference point.
-"
+∗3. In particular, we need to skip an empty line, we never use it as a reference point."
   (let (prev-widths ; the list of widths of each *column* of indentation of the previous line
         (reference-pos 0) ; the buffer position in the previous line of 1st printable char
         (std-width (window-font-width))
