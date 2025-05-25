@@ -195,7 +195,8 @@ three things:
 ∗1. When looking for a reference point to propagate widths (backwards) we
 skip empty lines.
 ∗2. When propagating forward, we skip empty lines
-∗3. In particular, we need to skip an empty line, we never use it as a reference point."
+∗3. In particular, we need to skip an empty line, we never use it as a
+    reference point."
   (let (prev-widths ; the list of widths of each *column* of indentation of the previous line
         (reference-pos 0) ; the buffer position in the previous line of 1st printable char
         (std-width (window-font-width))
