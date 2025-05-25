@@ -158,7 +158,7 @@ elastic-table separators.  Depending on ACTION an elastic-table
 separator, show or hide the separator boundaries by changing face
 attributes."
   (if (eq action 'entered)
-      (face-spec-set 'elastic-table-column-separator-face '((t (:box (:line-width (-1 . 0))))))
+      (face-spec-set 'elastic-table-column-separator-face '((t (:inherit hi-yellow))))
       (face-spec-set 'elastic-table-column-separator-face '((t )))))
 
 (defun elastic-table-propertize (the-table)
